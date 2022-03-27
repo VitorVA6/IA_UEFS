@@ -11,12 +11,23 @@ def read_file():
     for item in x:
         item.insert(0, -1)
     x = np.array(x)
-    d = np.array([item[4] for item in dados])
+    d = []
+    for item in dados:
+        if item[4] == 'Iris-setosa':
+            d.append([1, 0, 0])
+        elif item[4] == 'Iris-versicolor':
+            d.append([0, 1, 0])
+        elif item[4] == 'Iris-virginica':
+            d.append([0, 0, 1])
+    d = np.array(d)
     return x, d
 
+def g_u(i, beta):
+    return [1/(1+math.exp(-beta*item)) for item in i]
+
 def trainning():
-    w_1 = np.array([[random.random() for _ in range(5)] for _ in range(2)])
-    w_2 = np.array([random.random() for _ in range(3)])
+    w_1 = np.array([[random.random() for _ in range(5)] for _ in range(6)])
+    w_2 = np.array([[random.random() for _ in range(7)] for _ in range(3)])
     x, d = read_file()
     n = 0.1
     prec = 0.000001
@@ -24,12 +35,13 @@ def trainning():
     epocas = 0
     eqm_ant = 100000
     eqm_atual = 0
-    for xi, d in zip(x, d):
+    for xi, di in zip(x, d):
         i_1 = [sum(item) for item in w_1*xi]
-        y_1 = [1/(1+math.exp(-beta*item)) for item in i_1]
+        y_1 = g_u(i_1 ,beta)
         y_1.insert(0, -1)
-        i_2 = sum(w_2*y_1)
-        y_2 = 1/(1+math.exp(-beta*i_2))
-        print(y_2)        
+        i_2 = [sum(item) for item in w_2*y_1]
+        y_2 = np.array(g_u(i_2, beta))
+        g_2 = np.array((di-y_2)*beta*y_2*(1-y_2))
+        w_2 = w_2 + n*g_2.T*y_1
 
 trainning()
