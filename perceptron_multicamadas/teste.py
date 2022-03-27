@@ -1,4 +1,6 @@
-vetor = [1, 2, 3]
+import math
+import numpy as np
 
-vetor.insert(0, -1)
-print(vetor)
+a = np.array([0, 1])
+
+print(math.exp(a))
