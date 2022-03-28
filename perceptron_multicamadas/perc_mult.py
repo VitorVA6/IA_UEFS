@@ -35,19 +35,24 @@ def trainning():
     epocas = 0
     eqm_ant = 100000
     eqm_atual = 0
-    print(w_1)
-    for xi, di in zip(x, d):
-        i_1 = [sum(item) for item in w_1*xi]
-        y_1 = g_u(i_1 ,beta)
-        y_1.insert(0, -1)
-        y_1 = np.array(y_1)
-        i_2 = [sum(item) for item in w_2*y_1]
-        y_2 = np.array(g_u(i_2, beta))
-        g_2 = np.array([(di-y_2)*beta*y_2*(1-y_2)])
-        w_2 = w_2 + n*g_2.T*y_1
-        func = np.array(g_u(i_1, beta))
-        g_1 = np.array([sum(w_2[0:, 1:]*g_2.T)*beta*func*(1-func)])
-        w_1 = w_1 + n*g_1.T*xi
-    print(w_1)
+    while (abs(eqm_atual - eqm_ant)>=prec):
+        eqm_ant = eqm_atual
+        erros = []
+        for xi, di in zip(x, d):
+            i_1 = [sum(item) for item in w_1*xi]
+            y_1 = g_u(i_1 ,beta)
+            y_1.insert(0, -1)
+            y_1 = np.array(y_1)
+            i_2 = [sum(item) for item in w_2*y_1]
+            y_2 = np.array(g_u(i_2, beta))
+            g_2 = np.array([(di-y_2)*beta*y_2*(1-y_2)])
+            w_2 = w_2 + n*g_2.T*y_1
+            func = np.array(g_u(i_1, beta))
+            g_1 = np.array([sum(w_2[0:, 1:]*g_2.T)*beta*func*(1-func)])
+            w_1 = w_1 + n*g_1.T*xi
+            erros.append((1/2)*sum((di-y_2)**2))
+        eqm_atual = sum(erros)*(1/len(erros))
+        epocas += 1
+    print(epocas)
 
 trainning()
