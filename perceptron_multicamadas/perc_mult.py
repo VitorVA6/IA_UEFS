@@ -59,14 +59,19 @@ def trainning():
 def test(w_1, w_2):
     x, d = read_file('dataset/iris-10-1tst.dat')
     beta = 0.5
+    acertos = 0
     for xi, di in zip(x, d):
         i_1 = [sum(item) for item in w_1*xi]
         y_1 = g_u(i_1 ,beta)
         y_1.insert(0, -1)
         y_1 = np.array(y_1)
         i_2 = [sum(item) for item in w_2*y_1]
-        y_2 = np.array(g_u(i_2, beta))
-        print(y_2)
+        y_2 = np.around(g_u(i_2, beta))
+        if np.array_equal(y_2, di):
+            acertos+=1
+
+    acuracia = (acertos/len(d))*100
+    print(acuracia)
 
 w_1, w_2 = trainning()
 test(w_1, w_2)
