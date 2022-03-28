@@ -3,8 +3,8 @@ from random import random
 import numpy as np 
 import random
 
-def read_file():
-    file = open('dataset/iris-10-1tra.dat', 'r')
+def read_file(name_file):
+    file = open(name_file, 'r')
     dados = file.read().split('\n')[9:]
     dados = [item.split(', ') for item in dados]
     x = [list(map(float, item[0:4])) for item in dados]
@@ -28,7 +28,7 @@ def g_u(i, beta):
 def trainning():
     w_1 = np.array([[random.random() for _ in range(5)] for _ in range(6)])
     w_2 = np.array([[random.random() for _ in range(7)] for _ in range(3)])
-    x, d = read_file()
+    x, d = read_file('dataset/iris-10-1tra.dat')
     n = 0.1
     prec = 0.000001
     beta = 0.5
@@ -54,5 +54,19 @@ def trainning():
         eqm_atual = sum(erros)*(1/len(erros))
         epocas += 1
     print(epocas)
+    return w_1, w_2
 
-trainning()
+def test(w_1, w_2):
+    x, d = read_file('dataset/iris-10-1tst.dat')
+    beta = 0.5
+    for xi, di in zip(x, d):
+        i_1 = [sum(item) for item in w_1*xi]
+        y_1 = g_u(i_1 ,beta)
+        y_1.insert(0, -1)
+        y_1 = np.array(y_1)
+        i_2 = [sum(item) for item in w_2*y_1]
+        y_2 = np.array(g_u(i_2, beta))
+        print(y_2)
+
+w_1, w_2 = trainning()
+test(w_1, w_2)
