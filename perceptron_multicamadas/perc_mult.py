@@ -28,11 +28,14 @@ def g_u(i, beta):
 
 def trainning(file_name):
     w_1 = np.array([[random.random() for _ in range(5)] for _ in range(6)])
+    w_1_ant = w_1
     w_2 = np.array([[random.random() for _ in range(7)] for _ in range(3)])
+    w_2_ant = w_2
     x, d = read_file(file_name)
     n = 0.1
     prec = 0.000001
     beta = 0.5
+    alpha = 0.9
     epocas = 0
     eqm_ant = 100000
     eqm_atual = 0
@@ -47,10 +50,14 @@ def trainning(file_name):
             i_2 = [sum(item) for item in w_2*y_1]
             y_2 = np.array(g_u(i_2, beta))
             g_2 = np.array([(di-y_2)*beta*y_2*(1-y_2)])
-            w_2 = w_2 + n*g_2.T*y_1
+            aux_2 = w_2
+            w_2 = w_2 + n*g_2.T*y_1 + alpha*(w_2 - w_2_ant)
+            w_2_ant = aux_2
             func = np.array(g_u(i_1, beta))
             g_1 = np.array([sum(w_2[0:, 1:]*g_2.T)*beta*func*(1-func)])
-            w_1 = w_1 + n*g_1.T*xi
+            aux_1 = w_1
+            w_1 = w_1 + n*g_1.T*xi + alpha*(w_1 - w_1_ant)
+            w_1_ant = aux_1
             erros.append((1/2)*sum((di-y_2)**2))
         eqm_atual = sum(erros)*(1/len(erros))
         epocas += 1
@@ -79,7 +86,7 @@ lista_epocas = []
 lista_eqm = []
 lista_acuracia = []
 
-for pos in range(3):
+for pos in range(1):
     w_1, w_2, epocas, eqm = trainning(file_names[pos*2])
     acuracia = test(w_1, w_2, file_names[pos*2 + 1])
     lista_epocas.append(epocas)
