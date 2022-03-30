@@ -2,6 +2,7 @@ import math
 from random import random
 import numpy as np 
 import random
+import glob
 
 def read_file(name_file):
     file = open(name_file, 'r')
@@ -25,10 +26,10 @@ def read_file(name_file):
 def g_u(i, beta):
     return [1/(1+math.exp(-beta*item)) for item in i]
 
-def trainning():
+def trainning(file_name):
     w_1 = np.array([[random.random() for _ in range(5)] for _ in range(6)])
     w_2 = np.array([[random.random() for _ in range(7)] for _ in range(3)])
-    x, d = read_file('dataset/iris-10-1tra.dat')
+    x, d = read_file(file_name)
     n = 0.1
     prec = 0.000001
     beta = 0.5
@@ -53,11 +54,11 @@ def trainning():
             erros.append((1/2)*sum((di-y_2)**2))
         eqm_atual = sum(erros)*(1/len(erros))
         epocas += 1
-    print(epocas)
-    return w_1, w_2
 
-def test(w_1, w_2):
-    x, d = read_file('dataset/iris-10-1tst.dat')
+    return w_1, w_2, epocas, eqm_atual
+
+def test(w_1, w_2, file_name):
+    x, d = read_file(file_name)
     beta = 0.5
     acertos = 0
     for xi, di in zip(x, d):
@@ -71,7 +72,26 @@ def test(w_1, w_2):
             acertos+=1
 
     acuracia = (acertos/len(d))*100
-    print(acuracia)
+    return acuracia
 
-w_1, w_2 = trainning()
-test(w_1, w_2)
+file_names = glob.glob('dataset/*')
+lista_epocas = []
+lista_eqm = []
+lista_acuracia = []
+
+for pos in range(3):
+    w_1, w_2, epocas, eqm = trainning(file_names[pos*2])
+    acuracia = test(w_1, w_2, file_names[pos*2 + 1])
+    lista_epocas.append(epocas)
+    lista_eqm.append(eqm)
+    lista_acuracia.append(acuracia)
+    print('Parte '+str(pos+1) + '/10 concluída...')
+
+print('\n Resultados das médias: \n')
+print('Épocas: ' + str(sum(lista_epocas)/len(lista_epocas)))
+print('Eqm: ' + str(sum(lista_eqm)/len(lista_eqm)))
+print('Acurácia: ' + str(sum(lista_acuracia)/len(lista_acuracia)))
+print('\n Resultados do desvio padrão: \n')
+print('Épocas: ' + str(np.std(lista_epocas)))
+print('Eqm: ' + str(np.std(lista_eqm)))
+print('Acurácia: ' + str(np.std(lista_acuracia)))
