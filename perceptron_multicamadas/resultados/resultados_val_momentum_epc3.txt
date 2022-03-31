@@ -1,0 +1,51 @@
+resultados topologia 5-2-2:
+	Resultados das médias: 
+
+		Épocas: 370.5
+		Eqm: 0.06949864979330991
+		Acurácia: 79.99999999999999
+
+ 	Resultados do desvio padrão:
+
+		Épocas: 116.47424608041041
+		Eqm: 0.04441970068752438
+		Acurácia: 16.329931618554525
+
+resultados topologia 5-5-2:
+	Resultados das médias: 
+
+		Épocas: 300.5
+		Eqm: 0.029204442911581963
+		Acurácia: 92.66666666666666
+
+ 	Resultados do desvio padrão:
+
+		Épocas: 140.71122911836142
+		Eqm: 0.030590269815675655
+		Acurácia: 10.088497300281038
+
+resultados topologia 5-10-2:
+	Resultados das médias: 
+
+		Épocas: 512.6
+		Eqm: 0.016585237795732666
+		Acurácia: 96.66666666666666
+
+ 	Resultados do desvio padrão:
+
+		Épocas: 344.5606477820705
+		Eqm: 0.008973142125372893
+		Acurácia: 5.3748384988656985
+
+resultados topologia 5-20-2:
+	Resultados das médias: 
+
+		Épocas: 528.2
+		Eqm: 0.013465914271011247
+		Acurácia: 96.66666666666667
+
+ 	Resultados do desvio padrão:
+
+		Épocas: 674.2941198023307
+		Eqm: 0.006262922927310043
+		Acurácia: 5.3748384988656985

@@ -14,12 +14,12 @@ def read_file(name_file):
     x = np.array(x)
     d = []
     for item in dados:
-        if item[4] == 'Iris-setosa':
-            d.append([1, 0, 0])
-        elif item[4] == 'Iris-versicolor':
-            d.append([0, 1, 0])
-        elif item[4] == 'Iris-virginica':
-            d.append([0, 0, 1])
+        if item[4].strip() == 'Iris-setosa':
+            d.append([1, 0])
+        elif item[4].strip() == 'Iris-versicolor':
+            d.append([0, 1])
+        elif item[4].strip() == 'Iris-virginica':
+            d.append([0, 0])
     d = np.array(d)
     return x, d
 
@@ -27,15 +27,15 @@ def g_u(i, beta):
     return [1/(1+math.exp(-beta*item)) for item in i]
 
 def trainning(file_name):
-    w_1 = np.array([[random.random() for _ in range(5)] for _ in range(6)])
+    w_1 = np.array([[random.random() for _ in range(5)] for _ in range(10)])
     w_1_ant = w_1
-    w_2 = np.array([[random.random() for _ in range(7)] for _ in range(3)])
+    w_2 = np.array([[random.random() for _ in range(11)] for _ in range(2)])
     w_2_ant = w_2
     x, d = read_file(file_name)
     n = 0.1
     prec = 0.000001
     beta = 0.5
-    alpha = 0.9
+    alpha = 0
     epocas = 0
     eqm_ant = 100000
     eqm_atual = 0
@@ -86,7 +86,7 @@ lista_epocas = []
 lista_eqm = []
 lista_acuracia = []
 
-for pos in range(1):
+for pos in range(10):
     w_1, w_2, epocas, eqm = trainning(file_names[pos*2])
     acuracia = test(w_1, w_2, file_names[pos*2 + 1])
     lista_epocas.append(epocas)

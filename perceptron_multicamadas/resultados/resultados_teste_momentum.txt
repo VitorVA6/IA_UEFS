@@ -1,0 +1,13 @@
+resultados topologia 5-10-2:
+	Resultados das médias: 
+
+		Épocas: 152.2
+		Eqm: 0.013002716682761891
+		Acurácia: 93.33333333333334
+
+ 	Resultados do desvio padrão:
+
+		Épocas: 48.55265183282989
+		Eqm: 0.0031081406523273615
+		Acurácia: 5.163977794943221
+	
