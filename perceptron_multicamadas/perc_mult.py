@@ -27,15 +27,15 @@ def g_u(i, beta):
     return [1/(1+math.exp(-beta*item)) for item in i]
 
 def trainning(file_name):
-    w_1 = np.array([[random.random() for _ in range(5)] for _ in range(10)])
+    w_1 = np.array([[random.random() for _ in range(5)] for _ in range(30)])
     w_1_ant = w_1
-    w_2 = np.array([[random.random() for _ in range(11)] for _ in range(2)])
+    w_2 = np.array([[random.random() for _ in range(31)] for _ in range(2)])
     w_2_ant = w_2
     x, d = read_file(file_name)
     n = 0.1
     prec = 0.000001
     beta = 0.5
-    alpha = 0
+    alpha = 0.9
     epocas = 0
     eqm_ant = 100000
     eqm_atual = 0
@@ -81,7 +81,7 @@ def test(w_1, w_2, file_name):
     acuracia = (acertos/len(d))*100
     return acuracia
 
-file_names = glob.glob('dataset/*')
+file_names = glob.glob('dataset_validation/*')
 lista_epocas = []
 lista_eqm = []
 lista_acuracia = []
