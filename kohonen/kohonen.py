@@ -47,13 +47,35 @@ def kohonen():
     vizinhanca = vizinhos()
     n = 0.01
     epocas = 0
-    print(x)
+    menor = [100, 0, 0]
+    menor_aux = [0, 0, 0]
+    while menor_aux[0] != menor[0]:
+        menor_aux = menor
+        for xi in x:
+            menor = [100, 0, 0]
+            for l in range(5):
+                for c in range(5):
+                    norm = np.linalg.norm(xi-w[l][c])
+                    if norm < menor[0]:
+                        menor = [norm, l, c]
+            
+            vizinhos_menor = vizinhanca[menor[1]*5 + menor[2]]
+            w[menor[1]][menor[2]] = w[menor[1]][menor[2]] + n*(xi - w[menor[1]][menor[2]])
+            for e in vizinhos_menor:
+                w[e[0]][e[1]] = w[e[0]][e[1]] + (n/2)*(xi - w[e[0]][e[1]])
+        epocas += 1
+    print(epocas)        
 
 def teste():
-    lista = np.array([[5., 0., 2.],[4., 2., 1.]])
-    otimos = lista[0:, 0]/4.6
-    print(otimos)
-    lista[0:, 0] = otimos
-    print(lista)
+    a = np.array([[[1, 2, 3], [2, 4, 6]], [[10, 12, 13], [1, 2, 3]]])
+    b = np.array([4, 5, 6]) 
+    maior = [0, 0, 0]
+    for l in range(2):
+        for c in range(2):
+            norm = np.linalg.norm(b-a[l][c])
+            if norm > maior[0]:
+                maior = [norm, l, c]
+                
+    print(maior)
 
 kohonen()
