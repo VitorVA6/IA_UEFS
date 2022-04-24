@@ -3,6 +3,8 @@ import random
 import numpy as np 
 import glob
 
+dim = 10
+
 def read_file(name_file):
     file = open(name_file, 'r')
     dados = file.read().split('\n')[9:]
@@ -24,8 +26,8 @@ def normalize(arr, minimo, maximo):
 
 def vizinhos():
     viz = []
-    for l in range(5):
-        for c in range(5):
+    for l in range(dim):
+        for c in range(dim):
             viz.append([[l,c-1], [l, c+1] ,  [l-1, c], [l+1, c]])   
     for e in viz:
         for el in e:
@@ -35,7 +37,7 @@ def vizinhos():
                 del(viz[indice1][indice2])
     for e in viz:
         for el in e:
-            if 5 in el:
+            if dim in el:
                 indice1 = viz.index(e)
                 indice2 = e.index(el)
                 del(viz[indice1][indice2])
@@ -43,7 +45,7 @@ def vizinhos():
 
 def kohonen():
     x = read_file('dataset/iris-10-1tra.dat')
-    w = np.array([[[random.random() for _ in range(4)] for _ in range(5)]for _ in range(5)])
+    w = np.array([[[random.random() for _ in range(4)] for _ in range(dim)]for _ in range(dim)])
     vizinhanca = vizinhos()
     n = 0.01
     epocas = 0
@@ -53,29 +55,17 @@ def kohonen():
         menor_aux = menor
         for xi in x:
             menor = [100, 0, 0]
-            for l in range(5):
-                for c in range(5):
+            for l in range(dim):
+                for c in range(dim):
                     norm = np.linalg.norm(xi-w[l][c])
                     if norm < menor[0]:
                         menor = [norm, l, c]
             
-            vizinhos_menor = vizinhanca[menor[1]*5 + menor[2]]
+            vizinhos_menor = vizinhanca[menor[1]*dim + menor[2]]
             w[menor[1]][menor[2]] = w[menor[1]][menor[2]] + n*(xi - w[menor[1]][menor[2]])
             for e in vizinhos_menor:
                 w[e[0]][e[1]] = w[e[0]][e[1]] + (n/2)*(xi - w[e[0]][e[1]])
         epocas += 1
     print(epocas)        
-
-def teste():
-    a = np.array([[[1, 2, 3], [2, 4, 6]], [[10, 12, 13], [1, 2, 3]]])
-    b = np.array([4, 5, 6]) 
-    maior = [0, 0, 0]
-    for l in range(2):
-        for c in range(2):
-            norm = np.linalg.norm(b-a[l][c])
-            if norm > maior[0]:
-                maior = [norm, l, c]
-                
-    print(maior)
 
 kohonen()
