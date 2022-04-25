@@ -1,9 +1,9 @@
 import math
 import random
 import numpy as np 
-import glob
+from sklearn.cluster import KMeans
 
-dim = 12
+dim = 15
 
 def read_file(name_file):
     file = open(name_file, 'r')
@@ -56,11 +56,13 @@ def matrix_u(w, viz):
     return u
 
 def kohonen():
+    
     x = read_file('dataset/iris-10-1tra.dat')
     w = np.array([[[random.random() for _ in range(4)] for _ in range(dim)]for _ in range(dim)])
     vizinhanca = vizinhos()
     n = 0.01
     epocas = 0
+    
     menor = [100, 0, 0]
     menor_aux = [0, 0, 0]
     while menor_aux[0] != menor[0]:
@@ -78,8 +80,21 @@ def kohonen():
             for e in vizinhos_menor:
                 w[e[0]][e[1]] = w[e[0]][e[1]] + (n/2)*(xi - w[e[0]][e[1]])
         epocas += 1
-    print(epocas)
     u = matrix_u(w, vizinhanca) 
-    print(u)  
-
+    
+    kmeans = KMeans(n_clusters = 3, init = 'k-means++', n_init = 10, max_iter = 300)
+    pred_y = kmeans.fit(x)
+    centros = kmeans.cluster_centers_
+    print('\n\n')
+    
+    x2 = read_file('dataset/iris-10-1tst.dat')
+    for xi in x2:
+        menor = [100, 0, 0]
+        for l in range(dim):
+            for c in range(dim):
+                norm = np.linalg.norm(xi-w[l][c])
+                if norm < menor[0]:
+                    menor = [norm, l, c]
+        print(np.linalg.norm(w[menor[1]][menor[2]] - centros[0]), np.linalg.norm(w[menor[1]][menor[2]] - centros[1]), np.linalg.norm(w[menor[1]][menor[2]] - centros[2]))
+    
 kohonen()
