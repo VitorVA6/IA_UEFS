@@ -3,7 +3,7 @@ import random
 import numpy as np 
 import glob
 
-dim = 10
+dim = 12
 
 def read_file(name_file):
     file = open(name_file, 'r')
@@ -43,6 +43,18 @@ def vizinhos():
                 del(viz[indice1][indice2])
     return viz
 
+def matrix_u(w, viz):
+    u = np.zeros((dim, dim))
+    distancias = []
+    for l in range(dim):
+        for c in range(dim):
+            for elem in viz[l*dim + c]:
+                norm = np.linalg.norm(w[l][c] - w[elem[0]][elem[1]])
+                distancias.append(norm)
+            u[l][c] = sum(distancias)/len(distancias)
+            distancias=[]
+    return u
+
 def kohonen():
     x = read_file('dataset/iris-10-1tra.dat')
     w = np.array([[[random.random() for _ in range(4)] for _ in range(dim)]for _ in range(dim)])
@@ -66,6 +78,8 @@ def kohonen():
             for e in vizinhos_menor:
                 w[e[0]][e[1]] = w[e[0]][e[1]] + (n/2)*(xi - w[e[0]][e[1]])
         epocas += 1
-    print(epocas)        
+    print(epocas)
+    u = matrix_u(w, vizinhanca) 
+    print(u)  
 
 kohonen()
