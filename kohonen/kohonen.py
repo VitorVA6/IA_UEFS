@@ -2,8 +2,9 @@ import math
 import random
 import numpy as np 
 from sklearn.cluster import KMeans
+from matplotlib import pyplot as plt 
 
-dim = 15
+dim = 10
 
 def read_file(name_file):
     file = open(name_file, 'r')
@@ -81,11 +82,14 @@ def kohonen():
                 w[e[0]][e[1]] = w[e[0]][e[1]] + (n/2)*(xi - w[e[0]][e[1]])
         epocas += 1
     u = matrix_u(w, vizinhanca) 
-    
+    plt.imshow(u)
+    plt.show()
+    print('\n')
     kmeans = KMeans(n_clusters = 3, init = 'k-means++', n_init = 10, max_iter = 300)
     pred_y = kmeans.fit(x)
     centros = kmeans.cluster_centers_
-    print('\n\n')
+    print(centros)
+    print('\n')
     
     x2 = read_file('dataset/iris-10-1tst.dat')
     for xi in x2:
