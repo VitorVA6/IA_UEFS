@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 from matplotlib import pyplot as plt 
 
-dim = 10
+dim = 15
 
 def read_file(name_file):
     file = open(name_file, 'r')
@@ -82,7 +82,7 @@ def kohonen():
                 w[e[0]][e[1]] = w[e[0]][e[1]] + (n/2)*(xi - w[e[0]][e[1]])
         epocas += 1
     u = matrix_u(w, vizinhanca) 
-    plt.imshow(u)
+    plt.imshow(u, cmap='gray')
     plt.show()
     print('\n')
     kmeans = KMeans(n_clusters = 3, init = 'k-means++', n_init = 10, max_iter = 300)
