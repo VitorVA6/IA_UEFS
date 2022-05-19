@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 from matplotlib import pyplot as plt 
 
-dim = 15
+dim = 5
 
 def read_file(name_file):
     file = open(name_file, 'r')
