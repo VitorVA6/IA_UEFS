@@ -1,5 +1,7 @@
+import matplotlib
 import numpy as np 
 from matplotlib import pyplot as plt
+from matplotlib import lines
 from collections import defaultdict
 import math
 
@@ -107,34 +109,32 @@ def alpha_corte(corte, vet):
     return map(apply, vet)
 
 def centro_massa(vet):
-    val_intervalo = []
-    keys = defaultdict(list)
-    for key, value in enumerate(vet):
-        keys[value].append(key)
-    for value in keys:
-        if len(keys[value]) > 2:
-            val_intervalo.append([value, [keys[value][0], keys[value][-1]]]) 
-    val_inters = []
-    for item in val_intervalo:
-        inicio = math.ceil(press[item[1][0]]) 
-        fim =  math.floor(press[item[1][1]]) 
-        val_inters.append([item[0], list(range(inicio, fim+1))])
-    numerador = sum([item[0]*sum(item[1]) for item in val_inters])
-    denominador = sum([item[0]*len(item[1]) for item in val_inters])
-    print(numerador/denominador)
+    numerador = 0
+    for i in range(500):
+        numerador += vet[i]*press[i]
+    cm = numerador/sum(vet)
+    print(cm)
+    return cm
 
-saidas = []
+entradas = [[965, 11], [920, 7.6], [1050, 6.3], [843, 8.6], [1122, 5.2]]
 
-for regra in regras:
-    A = regra[0][closest(temperatura, 965)]
-    B = regra[1][closest(volume, 11)]
-    corte = min(A, B)
-    saidas.append(list(alpha_corte(corte, regra[2])))
+for t, v in entradas:
+    saidas = []
+    for regra in regras:
+        A = regra[0][closest(temperatura, t)]
+        B = regra[1][closest(volume, v)]
+        corte = min(A, B)
+        saidas.append(list(alpha_corte(corte, regra[2])))
 
-saidas = np.array(saidas)
+    saidas = np.array(saidas)
 
-agregado = [max(saidas[0:, item]) for item in range(500)]
+    agregado = [max(saidas[0:, item]) for item in range(500)]
 
-centro_massa(agregado)
-plt.plot(press, np.array(agregado))
-plt.show()
+    cm = centro_massa(agregado)
+    plt.plot(press, np.array(agregado))
+    plt.title('Temperatura:' +str(t)+' Volume:'+ str(v))
+    plt.xlabel('Pressão (atm)')
+    plt.ylabel('Pertinência')
+    plt.axvline(x=cm, ymin=0, ymax=1, color='r', linestyle='dashed', in_layout=True, label=str(cm)[0:4]+" atm")
+    plt.legend()
+    plt.show()
