@@ -1,4 +1,7 @@
 import numpy as np 
+from matplotlib import pyplot as plt
+from collections import defaultdict
+import math
 
 fator_temp = (1200-800)/499
 temperatura = np.array([800+fator_temp*item for item in range(500)])
@@ -79,12 +82,59 @@ for elem in press:
     if elem > 8 and elem < 10:
         press_media.append((10-elem)/(10-8))
 
+regras = [
+    [temp_baixa, vol_peq, press_baixa],
+    [temp_media, vol_peq, press_baixa],
+    [temp_alta, vol_peq, press_media],
+    [temp_baixa, vol_medio, press_baixa],
+    [temp_media, vol_medio, press_media],
+    [temp_alta, vol_medio, press_alta],
+    [temp_baixa, vol_gra, press_media],
+    [temp_media, vol_gra, press_alta],
+    [temp_alta, vol_gra, press_alta],
+    ]
+
 def closest(lst, K):
      lst = np.asarray(lst) 
      idx = (np.abs(lst - K)).argmin() 
      return idx
 
-A = temp_baixa[closest(temperatura, 965)]
-B = vol_peq[closest(volume, 11)]
+def alpha_corte(corte, vet):
+    def apply(x):
+        if x > corte:
+            x = corte
+        return x
+    return map(apply, vet)
 
-print(press_media)
+def centro_massa(vet):
+    val_intervalo = []
+    keys = defaultdict(list)
+    for key, value in enumerate(vet):
+        keys[value].append(key)
+    for value in keys:
+        if len(keys[value]) > 2:
+            val_intervalo.append([value, [keys[value][0], keys[value][-1]]]) 
+    val_inters = []
+    for item in val_intervalo:
+        inicio = math.ceil(press[item[1][0]]) 
+        fim =  math.floor(press[item[1][1]]) 
+        val_inters.append([item[0], list(range(inicio, fim+1))])
+    numerador = sum([item[0]*sum(item[1]) for item in val_inters])
+    denominador = sum([item[0]*len(item[1]) for item in val_inters])
+    print(numerador/denominador)
+
+saidas = []
+
+for regra in regras:
+    A = regra[0][closest(temperatura, 965)]
+    B = regra[1][closest(volume, 11)]
+    corte = min(A, B)
+    saidas.append(list(alpha_corte(corte, regra[2])))
+
+saidas = np.array(saidas)
+
+agregado = [max(saidas[0:, item]) for item in range(500)]
+
+centro_massa(agregado)
+plt.plot(press, np.array(agregado))
+plt.show()
