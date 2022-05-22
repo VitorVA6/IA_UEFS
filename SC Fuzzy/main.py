@@ -1,9 +1,5 @@
-import matplotlib
 import numpy as np 
 from matplotlib import pyplot as plt
-from matplotlib import lines
-from collections import defaultdict
-import math
 
 fator_temp = (1200-800)/499
 temperatura = np.array([800+fator_temp*item for item in range(500)])
@@ -113,7 +109,6 @@ def centro_massa(vet):
     for i in range(500):
         numerador += vet[i]*press[i]
     cm = numerador/sum(vet)
-    print(cm)
     return cm
 
 entradas = [[965, 11], [920, 7.6], [1050, 6.3], [843, 8.6], [1122, 5.2]]
